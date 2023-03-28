@@ -17,11 +17,6 @@ import {
 
 export const Variables = () => (
   <IonList>
-    <IonListHeader>
-      <IonText>
-        <h5>Variables</h5>
-      </IonText>
-    </IonListHeader>
     <IonItem>
       <IonLabel position="stacked">Colour</IonLabel>
       <IonSelect placeholder="Colour">
