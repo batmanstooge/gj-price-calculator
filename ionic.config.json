@@ -1,0 +1,7 @@
+{
+  "name": "price-calculator",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
