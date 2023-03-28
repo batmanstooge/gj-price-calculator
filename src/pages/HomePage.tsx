@@ -6,9 +6,8 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { Calculator } from "../components/calculator.component";
 import { Results } from "../components/results.component";
-import { Search } from "../components/search.component";
-import { Variables } from "../components/variables.component";
 import "./HomePage.css";
 
 const HomePage: React.FC = () => {
@@ -20,8 +19,7 @@ const HomePage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <Search />
-
+        <Calculator />
         <Results />
       </IonContent>
     </IonPage>
