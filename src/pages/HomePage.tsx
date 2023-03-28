@@ -1,4 +1,10 @@
 import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
   IonContent,
   IonHeader,
   IonItem,
@@ -98,10 +104,13 @@ const HomePage: React.FC = () => {
             </IonText>
           </IonListHeader>
           <IonItem>
-            <IonLabel position="floating">Colour</IonLabel>
+            <IonLabel position="stacked">Colour</IonLabel>
             <IonSelect placeholder="Colour">
               {colourSelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
@@ -111,7 +120,10 @@ const HomePage: React.FC = () => {
             <IonLabel position="stacked">Clarity</IonLabel>
             <IonSelect placeholder="Clarity">
               {claritySelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
@@ -121,7 +133,10 @@ const HomePage: React.FC = () => {
             <IonLabel position="stacked">Cut</IonLabel>
             <IonSelect placeholder="Cut">
               {cutSelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
@@ -131,7 +146,10 @@ const HomePage: React.FC = () => {
             <IonLabel position="stacked">Cut</IonLabel>
             <IonSelect placeholder="Cut">
               {cutSelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
@@ -141,7 +159,10 @@ const HomePage: React.FC = () => {
             <IonLabel position="stacked">Polish</IonLabel>
             <IonSelect placeholder="Polish">
               {polishSelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
@@ -151,13 +172,34 @@ const HomePage: React.FC = () => {
             <IonLabel position="stacked">Symmetry</IonLabel>
             <IonSelect placeholder="Symmetry">
               {symmetrySelectOptions.map((selectOption) => (
-                <IonSelectOption value={selectOption.value}>
+                <IonSelectOption
+                  key={selectOption.value}
+                  value={selectOption.value}
+                >
                   {selectOption.label}
                 </IonSelectOption>
               ))}
             </IonSelect>
           </IonItem>
         </IonList>
+        <IonButton expand="block">Calculate</IonButton>
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Result For</IonCardTitle>
+            <IonCardSubtitle>D-FL-X-X-X</IonCardSubtitle>
+            <IonCardSubtitle>
+              Price last modified on 12-May-2022
+            </IonCardSubtitle>
+            <IonCardSubtitle>
+              Discount last modified on 12-May-2022
+            </IonCardSubtitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <IonText>
+              <h1>1044.35</h1>
+            </IonText>
+          </IonCardContent>
+        </IonCard>
       </IonContent>
     </IonPage>
   );
