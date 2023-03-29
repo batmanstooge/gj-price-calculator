@@ -17,7 +17,8 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useContext, useState } from "react";
+import { AppContext } from "../contexts/AppContext";
 import { calculatePrice } from "../lib/calculator";
 import {
   claritySelectOptions,
@@ -34,7 +35,10 @@ const HomePage: React.FC = () => {
   const [cut, setCut] = useState<string>("X");
   const [polish, setPolish] = useState<string>("X");
   const [symmetry, setSymmetry] = useState<string>("X");
-  const [price, setPrice] = useState<number>(100);
+  const { price, discount } = useContext(AppContext);
+  const [priceAfterDiscount, setPriceAfterDiscount] = useState<number>(price);
+
+  console.log(price, discount);
 
   const formattedVariablesForCalculation = () => {
     return `${colour}-${clarity}-${cut}-${polish}-${symmetry}`;
@@ -76,10 +80,10 @@ const HomePage: React.FC = () => {
       cut,
       polish,
       symmetry,
-      100,
-      0.05
+      price,
+      discount
     );
-    setPrice(priceAfterDiscount);
+    setPriceAfterDiscount(priceAfterDiscount);
   };
 
   return (
@@ -202,7 +206,7 @@ const HomePage: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <IonText>
-              <h1>{price.toFixed(2)}</h1>
+              <h1>{priceAfterDiscount.toFixed(2)}</h1>
             </IonText>
           </IonCardContent>
         </IonCard>
