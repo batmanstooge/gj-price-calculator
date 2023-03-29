@@ -17,7 +17,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Calculator } from "../components/calculator.component";
 import { Results } from "../components/results.component";
 import {
@@ -29,12 +29,47 @@ import {
 } from "../models/codelist.model";
 import "./HomePage.css";
 
+const variableSeparator: string = "-";
+
 const HomePage: React.FC = () => {
-  const [colour, setColour] = useState("D");
-  const [clarity, setClarity] = useState("FL");
-  const [cut, setCut] = useState("X");
-  const [polish, setPolish] = useState("X");
-  const [symmetry, setSymmetry] = useState("X");
+  const [colour, setColour] = useState<string>("D");
+  const [clarity, setClarity] = useState<string>("FL");
+  const [cut, setCut] = useState<string>("X");
+  const [polish, setPolish] = useState<string>("X");
+  const [symmetry, setSymmetry] = useState<string>("X");
+  const formattedVariablesForCalculation = () => {
+    return `${colour}-${clarity}-${cut}-${polish}-${symmetry}`;
+  };
+  const colourVariableChanged = (event: {
+    detail: { value: SetStateAction<string> };
+  }) => {
+    setColour(event.detail.value);
+  };
+
+  const clarityVariableChanged = (event: {
+    detail: { value: SetStateAction<string> };
+  }) => {
+    setClarity(event.detail.value);
+  };
+
+  const cutVariableChanged = (event: {
+    detail: { value: SetStateAction<string> };
+  }) => {
+    setCut(event.detail.value);
+  };
+
+  const polishVariableChanged = (event: {
+    detail: { value: SetStateAction<string> };
+  }) => {
+    setPolish(event.detail.value);
+  };
+
+  const symmetryVariableChanged = (event: {
+    detail: { value: SetStateAction<string> };
+  }) => {
+    setSymmetry(event.detail.value);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -51,7 +86,11 @@ const HomePage: React.FC = () => {
             <IonList>
               <IonItem>
                 <IonLabel position="stacked">Colour</IonLabel>
-                <IonSelect placeholder="Colour" value={colour}>
+                <IonSelect
+                  placeholder="Colour"
+                  value={colour}
+                  onIonChange={colourVariableChanged}
+                >
                   {colourSelectOptions.map((selectOption) => (
                     <IonSelectOption
                       key={selectOption.value}
@@ -64,7 +103,11 @@ const HomePage: React.FC = () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Clarity</IonLabel>
-                <IonSelect placeholder="Clarity" value={clarity}>
+                <IonSelect
+                  placeholder="Clarity"
+                  value={clarity}
+                  onIonChange={clarityVariableChanged}
+                >
                   {claritySelectOptions.map((selectOption) => (
                     <IonSelectOption
                       key={selectOption.value}
@@ -77,7 +120,11 @@ const HomePage: React.FC = () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Cut</IonLabel>
-                <IonSelect placeholder="Cut" value={cut}>
+                <IonSelect
+                  placeholder="Cut"
+                  value={cut}
+                  onIonChange={cutVariableChanged}
+                >
                   {cutSelectOptions.map((selectOption) => (
                     <IonSelectOption
                       key={selectOption.value}
@@ -90,7 +137,11 @@ const HomePage: React.FC = () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Polish</IonLabel>
-                <IonSelect placeholder="Polish" value={polish}>
+                <IonSelect
+                  placeholder="Polish"
+                  value={polish}
+                  onIonChange={polishVariableChanged}
+                >
                   {polishSelectOptions.map((selectOption) => (
                     <IonSelectOption
                       key={selectOption.value}
@@ -103,7 +154,11 @@ const HomePage: React.FC = () => {
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">Symmetry</IonLabel>
-                <IonSelect placeholder="Symmetry" value={symmetry}>
+                <IonSelect
+                  placeholder="Symmetry"
+                  value={symmetry}
+                  onIonChange={symmetryVariableChanged}
+                >
                   {symmetrySelectOptions.map((selectOption) => (
                     <IonSelectOption
                       key={selectOption.value}
@@ -121,7 +176,9 @@ const HomePage: React.FC = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>Result For</IonCardTitle>
-            <IonCardSubtitle>D-FL-X-X-X</IonCardSubtitle>
+            <IonCardSubtitle>
+              {formattedVariablesForCalculation()}
+            </IonCardSubtitle>
             <IonCardSubtitle>
               Price last modified on 12-May-2022
             </IonCardSubtitle>
