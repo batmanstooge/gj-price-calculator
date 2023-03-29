@@ -20,6 +20,7 @@ import {
 import { SetStateAction, useState } from "react";
 import { Calculator } from "../components/calculator.component";
 import { Results } from "../components/results.component";
+import { calculatePrice } from "../lib/calculator";
 import {
   claritySelectOptions,
   colourSelectOptions,
@@ -196,43 +197,17 @@ const HomePage: React.FC = () => {
     setSymmetry(event.detail.value);
   };
 
-  const calculatePrice = () => {
-    const colourNumber = colourValueIntegerMapper(colour);
-    const clarityNumber = clarityValueIntegerMapper(clarity);
-    const cutNumber = cutValueIntegerMapper(cut);
-    const polishNumber = polishValueIntegerMapper(polish);
-    const symmetryNumber = symmetryValueIntegerMapper(symmetry);
-    const price = 100;
-    const discount = 0.05;
-    const priceAfterSymmetryDiscount = getPriceAfterDiscount(
-      price,
-      discount,
-      symmetryNumber
+  const calculatePriceHandler = () => {
+    const priceAfterDiscount = calculatePrice(
+      colour,
+      clarity,
+      cut,
+      polish,
+      symmetry,
+      100,
+      0.05
     );
-    const priceAfterPolishDiscount = getPriceAfterDiscount(
-      priceAfterSymmetryDiscount,
-      discount,
-      polishNumber
-    );
-    const priceAfterCutDiscount = getPriceAfterDiscount(
-      priceAfterPolishDiscount,
-      discount,
-      cutNumber
-    );
-
-    const priceAfterClarityDiscount = getPriceAfterDiscount(
-      priceAfterCutDiscount,
-      discount,
-      clarityNumber
-    );
-
-    const priceAfterColourDiscount = getPriceAfterDiscount(
-      priceAfterClarityDiscount,
-      discount,
-      colourNumber
-    );
-
-    setPrice(priceAfterColourDiscount);
+    setPrice(priceAfterDiscount);
   };
 
   const getPriceAfterDiscount = (
@@ -354,7 +329,7 @@ const HomePage: React.FC = () => {
                 </IonSelect>
               </IonItem>
             </IonList>
-            <IonButton expand="block" onClick={calculatePrice}>
+            <IonButton expand="block" onClick={calculatePriceHandler}>
               Calculate
             </IonButton>
           </IonCardContent>
