@@ -37,15 +37,30 @@ import {
 } from "ionicons/icons";
 import { AppContext } from "./contexts/AppContext";
 import { useState } from "react";
+import PricePage from "./pages/PricePage";
+import DiscountsPage from "./pages/DiscountsPage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
+  const editPriceHandler = (editedPrice: number) => {
+    setPrice(editedPrice);
+  };
+  const editDiscountHandler = (editedDiscount: number) => {
+    setDiscount(editedDiscount);
+  };
   return (
     <IonApp>
-      <AppContext.Provider value={{ price, discount }}>
+      <AppContext.Provider
+        value={{
+          price,
+          discount,
+          onEditPrice: editPriceHandler,
+          onEditDiscount: editDiscountHandler,
+        }}
+      >
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
@@ -54,6 +69,12 @@ const App: React.FC = () => {
               </Route>
               <Route exact path="/settings">
                 <SettingsPage />
+              </Route>
+              <Route exact path="/settings/price">
+                <PricePage />
+              </Route>
+              <Route exact path="/settings/discounts">
+                <DiscountsPage />
               </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
