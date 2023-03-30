@@ -29,7 +29,6 @@ setupIonicReact();
 
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  console.log("Rendering App with logged in as ", { loggedIn });
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
   const editPriceHandler = (editedPrice: number) => {
@@ -39,7 +38,6 @@ const App: React.FC = () => {
     setDiscount(editedDiscount);
   };
   const loggedInHandler = () => {
-    console.log("In LoggedInHandler");
     setLoggedIn(true);
   };
   return (
