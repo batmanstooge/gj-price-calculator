@@ -1,14 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 /* Core CSS required for Ionic components to work properly */
@@ -29,20 +20,16 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import HomePage from "./pages/HomePage";
-import SettingsPage from "./pages/SettingsPage";
-import {
-  calculator as calculatorIcon,
-  settings as settingsIcon,
-} from "ionicons/icons";
 import { AppContext } from "./contexts/AppContext";
 import { useState } from "react";
-import PricePage from "./pages/PricePage";
-import DiscountsPage from "./pages/DiscountsPage";
+import LoginPage from "./pages/LoginPage";
+import AppTabs from "./components/AppTabs";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  console.log("Rendering App with logged in as ", { loggedIn });
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
   const editPriceHandler = (editedPrice: number) => {
@@ -50,6 +37,10 @@ const App: React.FC = () => {
   };
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
+  };
+  const loggedInHandler = () => {
+    console.log("In LoggedInHandler");
+    setLoggedIn(true);
   };
   return (
     <IonApp>
@@ -62,35 +53,17 @@ const App: React.FC = () => {
         }}
       >
         <IonReactRouter>
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route exact path="/home">
-                <HomePage />
-              </Route>
-              <Route exact path="/settings">
-                <SettingsPage />
-              </Route>
-              <Route exact path="/settings/price">
-                <PricePage />
-              </Route>
-              <Route exact path="/settings/discounts">
-                <DiscountsPage />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/home" />
-              </Route>
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
-                <IonIcon icon={calculatorIcon} />
-                <IonLabel>Calculate</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="settings" href="/settings">
-                <IonIcon icon={settingsIcon} />
-                <IonLabel>Settings</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/login">
+              <LoginPage loggedIn={loggedIn} onLogin={loggedInHandler} />
+            </Route>
+            <Route path="/authenticated">
+              <AppTabs />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
+          </IonRouterOutlet>
         </IonReactRouter>
       </AppContext.Provider>
     </IonApp>
