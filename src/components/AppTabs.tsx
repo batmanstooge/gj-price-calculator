@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import {
   IonIcon,
   IonLabel,
@@ -16,8 +16,13 @@ import {
 } from "ionicons/icons";
 import PricePage from "../pages/PricePage";
 import DiscountsPage from "../pages/DiscountsPage";
+import { useAuthentication } from "../contexts/AuthenticationContext";
 
 const AppTabs: React.FC = () => {
+  const { loggedIn } = useAuthentication();
+  if (!loggedIn) {
+    return <Redirect to="/login" />;
+  }
   return (
     <IonTabs>
       <IonRouterOutlet>

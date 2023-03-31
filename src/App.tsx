@@ -24,11 +24,14 @@ import { AppContext } from "./contexts/AppContext";
 import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import AppTabs from "./components/AppTabs";
+import { AuthenticationContext } from "./contexts/AuthenticationContext";
+import NotFoundPage from "./pages/NotFoundPage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  console.log(`Rendering app with loggedIn ${loggedIn} `);
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
   const editPriceHandler = (editedPrice: number) => {
@@ -37,33 +40,35 @@ const App: React.FC = () => {
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
   };
-  const loggedInHandler = () => {
-    setLoggedIn(true);
-  };
   return (
     <IonApp>
-      <AppContext.Provider
-        value={{
-          price,
-          discount,
-          onEditPrice: editPriceHandler,
-          onEditDiscount: editDiscountHandler,
-        }}
-      >
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path="/login">
-              <LoginPage loggedIn={loggedIn} onLogin={loggedInHandler} />
-            </Route>
-            <Route path="/authenticated">
-              <AppTabs />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </AppContext.Provider>
+      <AuthenticationContext.Provider value={{ loggedIn: loggedIn }}>
+        <AppContext.Provider
+          value={{
+            price,
+            discount,
+            onEditPrice: editPriceHandler,
+            onEditDiscount: editDiscountHandler,
+          }}
+        >
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route exact path="/login">
+                <LoginPage onLogin={() => setLoggedIn(true)} />
+              </Route>
+              <Route path="/authenticated">
+                <AppTabs />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/login" />
+              </Route>
+              <Route>
+                <NotFoundPage />
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </AppContext.Provider>
+      </AuthenticationContext.Provider>
     </IonApp>
   );
 };

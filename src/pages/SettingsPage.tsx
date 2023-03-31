@@ -25,11 +25,11 @@ const SettingsPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem button routerLink="/settings/price">
+          <IonItem button routerLink="/authenticated/settings/price">
             <IonIcon slot="start" icon={cashOutline} />
             <IonText>Price</IonText>
           </IonItem>
-          <IonItem button routerLink="/settings/discounts">
+          <IonItem button routerLink="/authenticated/settings/discounts">
             <IonIcon slot="start" icon={discOutline} />
             <IonText>Discounts</IonText>
           </IonItem>
