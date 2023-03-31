@@ -1,5 +1,10 @@
 import { Redirect, Route } from "react-router-dom";
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import {
+  IonApp,
+  IonLoading,
+  IonRouterOutlet,
+  setupIonicReact,
+} from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 /* Core CSS required for Ionic components to work properly */
@@ -31,10 +36,14 @@ import { firebaseAuth } from "./firebase/firebase";
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [authStateChangedStatus, setAuthStateChangedStatus] = useState({
+    loading: true,
+    loggedIn: false,
+  });
   useEffect(() => {
+    console.log("In Use Effect");
     firebaseAuth.onAuthStateChanged((user) => {
-      setLoggedIn(Boolean(user));
+      setAuthStateChangedStatus({ loading: false, loggedIn: Boolean(user) });
     });
   }, []);
   const [price, setPrice] = useState<number>(100);
@@ -46,9 +55,14 @@ const App: React.FC = () => {
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
   };
+  if (authStateChangedStatus.loading) {
+    return <IonLoading isOpen />;
+  }
   return (
     <IonApp>
-      <AuthenticationContext.Provider value={{ loggedIn: loggedIn }}>
+      <AuthenticationContext.Provider
+        value={{ loggedIn: authStateChangedStatus.loggedIn }}
+      >
         <AppContext.Provider
           value={{
             price,
