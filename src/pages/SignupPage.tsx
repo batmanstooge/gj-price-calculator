@@ -16,7 +16,11 @@ import { useState } from "react";
 import { Redirect } from "react-router";
 import { useAuthentication } from "../contexts/AuthenticationContext";
 import { firebaseAuth } from "../firebase/firebase";
-import { validateEmail, validatePassword } from "../utils/validations";
+import {
+  validateEmail,
+  validatePassword,
+  validateRepeatPassword,
+} from "../utils/validations";
 import "./HomePage.css";
 
 interface statusType {
@@ -24,10 +28,13 @@ interface statusType {
   error: any;
 }
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const { loggedIn } = useAuthentication();
   const [email, setEmail] = useState<string | null | undefined>("");
   const [password, setPassword] = useState<string | null | undefined>("");
+  const [repeatPassword, setRepeatPassword] = useState<
+    string | null | undefined
+  >("");
   const [status, setStatus] = useState<statusType>({
     loading: false,
     error: null,
@@ -35,18 +42,19 @@ const LoginPage: React.FC = () => {
   if (loggedIn) {
     return <Redirect to="/authenticated/home" />;
   }
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     try {
       validateEmail(email);
       validatePassword(password);
+      console.log("password", password);
+      validateRepeatPassword(password, repeatPassword);
       setStatus({ loading: true, error: null });
-      const userCredential = await firebaseAuth.signInWithEmailAndPassword(
+      const userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email ? email : "",
         password ? password : ""
       );
       console.log(userCredential);
     } catch (error) {
-      console.log("error", error);
       setStatus({ loading: false, error: error });
     }
   };
@@ -54,7 +62,7 @@ const LoginPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Login</IonTitle>
+          <IonTitle>Signup</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -73,15 +81,22 @@ const LoginPage: React.FC = () => {
               onIonChange={(event) => setPassword(event.detail.value)}
             />
           </IonItem>
+          <IonItem>
+            <IonLabel position="stacked">Repeat Password</IonLabel>
+            <IonInput
+              type="password"
+              onIonChange={(event) => setRepeatPassword(event.detail.value)}
+            />
+          </IonItem>
         </IonList>
         {status.error && (
           <IonText color="danger">{status.error.message}</IonText>
         )}
-        <IonButton expand="block" onClick={handleLogin}>
-          Login
+        <IonButton expand="block" onClick={handleSignup}>
+          Signup
         </IonButton>
-        <IonButton expand="block" fill="clear" routerLink="/signup">
-          Not Signedup? Signup
+        <IonButton expand="block" fill="clear" routerLink="/login">
+          Already signed in? Login
         </IonButton>
         <IonLoading isOpen={status.loading} />
       </IonContent>
@@ -89,4 +104,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

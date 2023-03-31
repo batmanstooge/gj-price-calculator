@@ -26,26 +26,20 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { AppContext } from "./contexts/AppContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import AppTabs from "./components/AppTabs";
-import { AuthenticationContext } from "./contexts/AuthenticationContext";
+import {
+  AuthenticationContext,
+  useFirebaseAuthentication,
+} from "./contexts/AuthenticationContext";
 import NotFoundPage from "./pages/NotFoundPage";
-import { firebaseAuth } from "./firebase/firebase";
+import SignupPage from "./pages/SignupPage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [authStateChangedStatus, setAuthStateChangedStatus] = useState({
-    loading: true,
-    loggedIn: false,
-  });
-  useEffect(() => {
-    console.log("In Use Effect");
-    firebaseAuth.onAuthStateChanged((user) => {
-      setAuthStateChangedStatus({ loading: false, loggedIn: Boolean(user) });
-    });
-  }, []);
+  const { loading, authentication } = useFirebaseAuthentication();
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
 
@@ -55,14 +49,14 @@ const App: React.FC = () => {
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
   };
-  if (authStateChangedStatus.loading) {
+  if (loading) {
     return <IonLoading isOpen />;
   }
+
+  console.log("App started with ", authentication);
   return (
     <IonApp>
-      <AuthenticationContext.Provider
-        value={{ loggedIn: authStateChangedStatus.loggedIn }}
-      >
+      <AuthenticationContext.Provider value={authentication!}>
         <AppContext.Provider
           value={{
             price,
@@ -75,6 +69,9 @@ const App: React.FC = () => {
             <IonRouterOutlet>
               <Route exact path="/login">
                 <LoginPage />
+              </Route>
+              <Route exact path="/signup">
+                <SignupPage />
               </Route>
               <Route path="/authenticated">
                 <AppTabs />

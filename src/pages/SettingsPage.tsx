@@ -13,6 +13,7 @@ import { useContext } from "react";
 import { AppContext } from "../contexts/AppContext";
 import { cashOutline, discOutline, exitOutline } from "ionicons/icons";
 import "./Settings.css";
+import { firebaseAuth } from "../firebase/firebase";
 
 const SettingsPage: React.FC = () => {
   useContext(AppContext);
@@ -33,7 +34,7 @@ const SettingsPage: React.FC = () => {
             <IonIcon slot="start" icon={discOutline} />
             <IonText>Discounts</IonText>
           </IonItem>
-          <IonItem button>
+          <IonItem button onClick={() => firebaseAuth.signOut()}>
             <IonIcon slot="start" icon={exitOutline} />
             <IonText>Logout</IonText>
           </IonItem>
