@@ -18,11 +18,7 @@ import { useAuthentication } from "../contexts/AuthenticationContext";
 import { firebaseAuth } from "../firebase/firebase";
 import "./HomePage.css";
 
-interface LoginPageProps {
-  onLogin: () => void;
-}
-
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const LoginPage: React.FC = () => {
   const { loggedIn } = useAuthentication();
   const [email, setEmail] = useState<string | null | undefined>("");
   const [password, setPassword] = useState<string | null | undefined>("");
@@ -38,8 +34,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         password ? password : ""
       );
       console.log(userCredential);
-      setStatus({ loading: false, error: false });
-      onLogin();
+      // setStatus({ loading: false, error: false });
+      // onLogin();
     } catch (error) {
       setStatus({ loading: false, error: true });
     }

@@ -21,19 +21,25 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { AppContext } from "./contexts/AppContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import AppTabs from "./components/AppTabs";
 import { AuthenticationContext } from "./contexts/AuthenticationContext";
 import NotFoundPage from "./pages/NotFoundPage";
+import { firebaseAuth } from "./firebase/firebase";
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  console.log(`Rendering app with loggedIn ${loggedIn} `);
+  useEffect(() => {
+    firebaseAuth.onAuthStateChanged((user) => {
+      setLoggedIn(Boolean(user));
+    });
+  }, []);
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
+
   const editPriceHandler = (editedPrice: number) => {
     setPrice(editedPrice);
   };
@@ -54,7 +60,7 @@ const App: React.FC = () => {
           <IonReactRouter>
             <IonRouterOutlet>
               <Route exact path="/login">
-                <LoginPage onLogin={() => setLoggedIn(true)} />
+                <LoginPage />
               </Route>
               <Route path="/authenticated">
                 <AppTabs />
