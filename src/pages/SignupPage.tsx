@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useState } from "react";
-import { firebaseAuth } from "../firebase/firebase";
+import { firebaseAuth, firestore } from "../firebase/firebase";
 import {
   validateEmail,
   validatePassword,
@@ -26,7 +26,11 @@ interface statusType {
   error: any;
 }
 
-const SignupPage: React.FC = () => {
+interface SignupPageProps {
+  onSignup: () => void;
+}
+
+const SignupPage: React.FC<SignupPageProps> = ({ onSignup }) => {
   const [email, setEmail] = useState<string | null | undefined>("");
   const [password, setPassword] = useState<string | null | undefined>("");
   const [repeatPassword, setRepeatPassword] = useState<
@@ -46,6 +50,13 @@ const SignupPage: React.FC = () => {
         email ? email : "",
         password ? password : ""
       );
+      const userUid = userCredential.user?.uid;
+      await firestore.collection("users").add({
+        uid: userUid,
+        role: "user",
+        email: email,
+      });
+      onSignup();
     } catch (error) {
       setStatus({ loading: false, error: error });
     }

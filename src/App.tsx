@@ -50,6 +50,10 @@ const App: React.FC = () => {
     setLoggedIn(false);
   };
 
+  const handleSignup = () => {
+    setLoggedIn(true);
+  };
+
   return (
     <IonApp>
       <AppContext.Provider
@@ -66,7 +70,7 @@ const App: React.FC = () => {
               <LoginPage loggedIn={loggedIn} onLogin={handleLogin} />
             </Route>
             <Route exact path="/signup">
-              <SignupPage />
+              <SignupPage onSignup={handleSignup} />
             </Route>
             <Route path="/authenticated">
               <AppTabs
