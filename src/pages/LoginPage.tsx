@@ -14,24 +14,20 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { Redirect } from "react-router";
-import { useAuthentication } from "../contexts/AuthenticationContext";
-import { firebaseAuth } from "../firebase/firebase";
+import { firebaseAuth, firestore } from "../firebase/firebase";
 import { validateEmail, validatePassword } from "../utils/validations";
 import "./HomePage.css";
 
-interface statusType {
-  loading: boolean;
-  error: any;
+interface LoginPageProps {
+  loggedIn: boolean;
+  onLogin: (role: string) => void;
 }
 
-const LoginPage: React.FC = () => {
-  const { loggedIn } = useAuthentication();
+const LoginPage: React.FC<LoginPageProps> = ({ loggedIn, onLogin }) => {
   const [email, setEmail] = useState<string | null | undefined>("");
   const [password, setPassword] = useState<string | null | undefined>("");
-  const [status, setStatus] = useState<statusType>({
-    loading: false,
-    error: null,
-  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
   if (loggedIn) {
     return <Redirect to="/authenticated/home" />;
   }
@@ -39,15 +35,26 @@ const LoginPage: React.FC = () => {
     try {
       validateEmail(email);
       validatePassword(password);
-      setStatus({ loading: true, error: null });
+      setLoading(true);
+      setError(null);
       const userCredential = await firebaseAuth.signInWithEmailAndPassword(
         email ? email : "",
         password ? password : ""
       );
-      console.log(userCredential);
+      let role = "user";
+      const userQuerySnapshot = await firestore
+        .collection("users")
+        .where("uid", "==", userCredential.user?.uid)
+        .get();
+      userQuerySnapshot.forEach((userDoc) => {
+        role = userDoc.data().role;
+      });
+      setLoading(false);
+      setError(null);
+      if (onLogin) onLogin(role);
     } catch (error) {
-      console.log("error", error);
-      setStatus({ loading: false, error: error });
+      setLoading(false);
+      setError(error);
     }
   };
   return (
@@ -74,16 +81,14 @@ const LoginPage: React.FC = () => {
             />
           </IonItem>
         </IonList>
-        {status.error && (
-          <IonText color="danger">{status.error.message}</IonText>
-        )}
+        {error && <IonText color="danger">{error.message}</IonText>}
         <IonButton expand="block" onClick={handleLogin}>
           Login
         </IonButton>
         <IonButton expand="block" fill="clear" routerLink="/signup">
           Not Signedup? Signup
         </IonButton>
-        <IonLoading isOpen={status.loading} />
+        <IonLoading isOpen={loading} />
       </IonContent>
     </IonPage>
   );

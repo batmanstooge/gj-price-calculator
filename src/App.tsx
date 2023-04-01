@@ -1,10 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import {
-  IonApp,
-  IonLoading,
-  IonRouterOutlet,
-  setupIonicReact,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
 /* Core CSS required for Ionic components to work properly */
@@ -29,17 +24,14 @@ import { AppContext } from "./contexts/AppContext";
 import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import AppTabs from "./components/AppTabs";
-import {
-  AuthenticationContext,
-  useFirebaseAuthentication,
-} from "./contexts/AuthenticationContext";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/SignupPage";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { loading, authentication } = useFirebaseAuthentication();
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [role, setRole] = useState("user");
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
 
@@ -49,43 +41,49 @@ const App: React.FC = () => {
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
   };
-  if (loading) {
-    return <IonLoading isOpen />;
-  }
+  const handleLogin = (role: string) => {
+    setLoggedIn(true);
+    setRole(role);
+  };
 
-  console.log("App started with ", authentication);
+  const handleSignout = () => {
+    setLoggedIn(false);
+  };
+
   return (
     <IonApp>
-      <AuthenticationContext.Provider value={authentication!}>
-        <AppContext.Provider
-          value={{
-            price,
-            discount,
-            onEditPrice: editPriceHandler,
-            onEditDiscount: editDiscountHandler,
-          }}
-        >
-          <IonReactRouter>
-            <IonRouterOutlet>
-              <Route exact path="/login">
-                <LoginPage />
-              </Route>
-              <Route exact path="/signup">
-                <SignupPage />
-              </Route>
-              <Route path="/authenticated">
-                <AppTabs />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/login" />
-              </Route>
-              <Route>
-                <NotFoundPage />
-              </Route>
-            </IonRouterOutlet>
-          </IonReactRouter>
-        </AppContext.Provider>
-      </AuthenticationContext.Provider>
+      <AppContext.Provider
+        value={{
+          price,
+          discount,
+          onEditPrice: editPriceHandler,
+          onEditDiscount: editDiscountHandler,
+        }}
+      >
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/login">
+              <LoginPage loggedIn={loggedIn} onLogin={handleLogin} />
+            </Route>
+            <Route exact path="/signup">
+              <SignupPage />
+            </Route>
+            <Route path="/authenticated">
+              <AppTabs
+                role={role}
+                onSignout={handleSignout}
+                loggedIn={loggedIn}
+              />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
+            <Route>
+              <NotFoundPage />
+            </Route>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </AppContext.Provider>
     </IonApp>
   );
 };

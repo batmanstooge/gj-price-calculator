@@ -14,9 +14,27 @@ import { AppContext } from "../contexts/AppContext";
 import { cashOutline, discOutline, exitOutline } from "ionicons/icons";
 import "./Settings.css";
 import { firebaseAuth } from "../firebase/firebase";
+import { Redirect } from "react-router";
 
-const SettingsPage: React.FC = () => {
+interface SettingsPageProps {
+  role: string;
+  onSignout: () => void;
+  loggedIn: boolean;
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = ({
+  role,
+  onSignout,
+  loggedIn,
+}) => {
   useContext(AppContext);
+  const onSignoutHandler = async () => {
+    await firebaseAuth.signOut();
+    onSignout();
+  };
+  if (!loggedIn) {
+    return <Redirect to="/login" />;
+  }
   return (
     <IonPage>
       <IonHeader>
@@ -26,15 +44,19 @@ const SettingsPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonItem button routerLink="/authenticated/settings/price">
-            <IonIcon slot="start" icon={cashOutline} />
-            <IonText>Price</IonText>
-          </IonItem>
-          <IonItem button routerLink="/authenticated/settings/discounts">
-            <IonIcon slot="start" icon={discOutline} />
-            <IonText>Discounts</IonText>
-          </IonItem>
-          <IonItem button onClick={() => firebaseAuth.signOut()}>
+          {role === "admin" && (
+            <IonItem button routerLink="/authenticated/settings/price">
+              <IonIcon slot="start" icon={cashOutline} />
+              <IonText>Price</IonText>
+            </IonItem>
+          )}
+          {role === "admin" && (
+            <IonItem button routerLink="/authenticated/settings/discounts">
+              <IonIcon slot="start" icon={discOutline} />
+              <IonText>Discounts</IonText>
+            </IonItem>
+          )}
+          <IonItem button onClick={onSignoutHandler}>
             <IonIcon slot="start" icon={exitOutline} />
             <IonText>Logout</IonText>
           </IonItem>

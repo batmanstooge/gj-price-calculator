@@ -13,8 +13,6 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useState } from "react";
-import { Redirect } from "react-router";
-import { useAuthentication } from "../contexts/AuthenticationContext";
 import { firebaseAuth } from "../firebase/firebase";
 import {
   validateEmail,
@@ -29,7 +27,6 @@ interface statusType {
 }
 
 const SignupPage: React.FC = () => {
-  const { loggedIn } = useAuthentication();
   const [email, setEmail] = useState<string | null | undefined>("");
   const [password, setPassword] = useState<string | null | undefined>("");
   const [repeatPassword, setRepeatPassword] = useState<
@@ -39,21 +36,16 @@ const SignupPage: React.FC = () => {
     loading: false,
     error: null,
   });
-  if (loggedIn) {
-    return <Redirect to="/authenticated/home" />;
-  }
   const handleSignup = async () => {
     try {
       validateEmail(email);
       validatePassword(password);
-      console.log("password", password);
       validateRepeatPassword(password, repeatPassword);
       setStatus({ loading: true, error: null });
       const userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email ? email : "",
         password ? password : ""
       );
-      console.log(userCredential);
     } catch (error) {
       setStatus({ loading: false, error: error });
     }
