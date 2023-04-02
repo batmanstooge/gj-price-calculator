@@ -196,7 +196,7 @@ const HomePage: React.FC = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              Result For {formattedVariablesForCalculation()} with Price{" "}
+              Result For {formattedVariablesForCalculation()} with{" "}
               {`Price: ${price}`} and {`Discount: ${discount}`}
             </IonCardTitle>
           </IonCardHeader>
