@@ -21,11 +21,12 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import { AppContext } from "./contexts/AppContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import AppTabs from "./components/AppTabs";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/SignupPage";
+import { firestore } from "./firebase/firebase";
 
 setupIonicReact();
 
@@ -34,6 +35,30 @@ const App: React.FC = () => {
   const [role, setRole] = useState("user");
   const [price, setPrice] = useState<number>(100);
   const [discount, setDiscount] = useState<number>(0.05);
+
+  useEffect(() => {
+    const getPriceAndDiscount = async () => {
+      const priceDocumentRef = firestore.collection("price").doc("price");
+      const priceDocumentSnapshot = await priceDocumentRef.get();
+      if (priceDocumentSnapshot) {
+        const priceDocumentData = priceDocumentSnapshot.data();
+        const documentDataPrice = priceDocumentData?.price;
+        console.log("documentDataPrice", documentDataPrice);
+        setPrice(documentDataPrice);
+      }
+      const discountDocumentRef = firestore
+        .collection("discount")
+        .doc("discount");
+      const discountDocumentSnapshot = await discountDocumentRef.get();
+      if (discountDocumentSnapshot) {
+        const documentData = discountDocumentSnapshot.data();
+        const documentDataDiscount = documentData?.discount;
+        console.log("documentDataDiscount", documentDataDiscount);
+        setDiscount(documentDataDiscount);
+      }
+    };
+    getPriceAndDiscount();
+  }, []);
 
   const editPriceHandler = (editedPrice: number) => {
     setPrice(editedPrice);
