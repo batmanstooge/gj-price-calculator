@@ -41,13 +41,13 @@ const DiscountsPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Price</IonTitle>
+          <IonTitle>Discount</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonList>
           <IonItem>
-            <IonLabel>Edit Price</IonLabel>
+            <IonLabel>Edit Discount</IonLabel>
             <IonInput
               type="number"
               value={enteredDiscount}

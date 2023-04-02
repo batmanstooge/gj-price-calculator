@@ -195,16 +195,10 @@ const HomePage: React.FC = () => {
         </IonCard>
         <IonCard>
           <IonCardHeader>
-            <IonCardTitle>Result For</IonCardTitle>
-            <IonCardSubtitle>
-              {formattedVariablesForCalculation()}
-            </IonCardSubtitle>
-            <IonCardSubtitle>
-              Price last modified on 12-May-2022
-            </IonCardSubtitle>
-            <IonCardSubtitle>
-              Discount last modified on 12-May-2022
-            </IonCardSubtitle>
+            <IonCardTitle>
+              Result For {formattedVariablesForCalculation()} with Price{" "}
+              {`Price: ${price}`} and {`Discount: ${discount}`}
+            </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
             <IonText>
