@@ -65,6 +65,7 @@
     "iOS >=13"
   ],
   "devDependencies": {
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/cli": "4.7.1"
   },
   "description": "An Ionic project"
