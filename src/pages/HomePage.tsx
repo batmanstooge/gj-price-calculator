@@ -5,12 +5,15 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
+  IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
@@ -35,12 +38,13 @@ const HomePage: React.FC = () => {
   const [cut, setCut] = useState<string>("X");
   const [polish, setPolish] = useState<string>("X");
   const [symmetry, setSymmetry] = useState<string>("X");
-  const { price, discount } = useContext(AppContext);
-  const [priceAfterDiscount, setPriceAfterDiscount] = useState<number>(+price);
+  const { cost, costModifiedISOString, discount, discountModifiedISOString } =
+    useContext(AppContext);
+  const [price, setPrice] = useState<number>(+cost);
 
   useEffect(() => {
-    setPriceAfterDiscount(+price);
-  }, [price]);
+    setPrice(+cost);
+  }, [cost]);
 
   const formattedVariablesForCalculation = () => {
     return `${colour}-${clarity}-${cut}-${polish}-${symmetry}`;
@@ -76,16 +80,16 @@ const HomePage: React.FC = () => {
   };
 
   const calculatePriceHandler = () => {
-    const priceAfterDiscount = calculatePrice(
+    const calculatedPrice = calculatePrice(
       colour,
       clarity,
       cut,
       polish,
       symmetry,
-      +price,
+      +cost,
       discount
     );
-    setPriceAfterDiscount(priceAfterDiscount);
+    setPrice(calculatedPrice);
   };
 
   return (
@@ -196,13 +200,50 @@ const HomePage: React.FC = () => {
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              Result For {formattedVariablesForCalculation()} with{" "}
-              {`Price: ${price}`} and {`Discount: ${discount}`}
+              Price for {formattedVariablesForCalculation()}
+              <IonCardSubtitle>
+                <IonGrid>
+                  <IonRow class="ion-align-items-center">
+                    <IonCol>Cost</IonCol>
+                    <IonCol>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol>
+                            <IonText>{cost}</IonText>
+                          </IonCol>
+                        </IonRow>
+                        <IonRow>
+                          <IonCol>
+                            <IonText>{costModifiedISOString}</IonText>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow class="ion-align-items-center">
+                    <IonCol>Discount</IonCol>
+                    <IonCol>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol>
+                            <IonText>{discount}</IonText>
+                          </IonCol>
+                        </IonRow>
+                        <IonRow>
+                          <IonCol>
+                            <IonText>{discountModifiedISOString}</IonText>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCardSubtitle>
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
             <IonText>
-              <h1>{priceAfterDiscount?.toFixed(2)}</h1>
+              <h1>{price?.toFixed(2)}</h1>
             </IonText>
           </IonCardContent>
         </IonCard>

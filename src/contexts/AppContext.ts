@@ -1,11 +1,20 @@
 import { createContext } from "react";
 
 interface appDefaultValues {
-  price: number;
+  cost: number;
+  costModifiedISOString: string;
   discount: number;
-  onEditPrice?: (price: number) => void;
+  discountModifiedISOString: string;
+  onEditCost?: (cost: number) => void;
   onEditDiscount?: (discount: number) => void;
 }
 
-const defaultValue: appDefaultValues = { price: 100, discount: 0.05 };
+const defaultDateISOString = new Date().toISOString();
+
+const defaultValue: appDefaultValues = {
+  cost: 100,
+  costModifiedISOString: defaultDateISOString,
+  discount: 0.05,
+  discountModifiedISOString: defaultDateISOString,
+};
 export const AppContext = createContext(defaultValue);

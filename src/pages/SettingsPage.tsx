@@ -45,9 +45,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       <IonContent>
         <IonList>
           {role === "admin" && (
-            <IonItem button routerLink="/authenticated/settings/price">
+            <IonItem button routerLink="/authenticated/settings/cost">
               <IonIcon slot="start" icon={cashOutline} />
-              <IonText>Price</IonText>
+              <IonText>Cost</IonText>
             </IonItem>
           )}
           {role === "admin" && (

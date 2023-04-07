@@ -14,7 +14,7 @@ import {
   calculator as calculatorIcon,
   settings as settingsIcon,
 } from "ionicons/icons";
-import PricePage from "../pages/PricePage";
+import CostPage from "../pages/CostPage";
 import DiscountsPage from "../pages/DiscountsPage";
 
 interface AppTabsProps {
@@ -33,8 +33,8 @@ const AppTabs: React.FC<AppTabsProps> = ({ role, onSignout, loggedIn }) => {
         <Route exact path="/authenticated/settings">
           <SettingsPage role={role} onSignout={onSignout} loggedIn={loggedIn} />
         </Route>
-        <Route exact path="/authenticated/settings/price">
-          <PricePage />
+        <Route exact path="/authenticated/settings/cost">
+          <CostPage />
         </Route>
         <Route exact path="/authenticated/settings/discounts">
           <DiscountsPage />

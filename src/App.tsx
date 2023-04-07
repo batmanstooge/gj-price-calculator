@@ -30,38 +30,49 @@ import { firestore } from "./firebase/firebase";
 
 setupIonicReact();
 
+const defaultDateISOString = new Date().toISOString();
+
 const App: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState("user");
-  const [price, setPrice] = useState<number>(100);
+  const [cost, setCost] = useState<number>(100);
+  const [costModifiedISOString, setCostModifiedISOString] =
+    useState(defaultDateISOString);
   const [discount, setDiscount] = useState<number>(0.05);
+  const [discountModifiedISOString, setDiscountModifiedISOString] =
+    useState(defaultDateISOString);
 
   useEffect(() => {
-    const getPriceAndDiscount = async () => {
-      const priceDocumentRef = firestore.collection("price").doc("price");
-      const priceDocumentSnapshot = await priceDocumentRef.get();
-      if (priceDocumentSnapshot) {
-        const priceDocumentData = priceDocumentSnapshot.data();
-        const documentDataPrice = priceDocumentData?.price;
-        console.log("documentDataPrice", documentDataPrice);
-        setPrice(documentDataPrice);
+    const getCostAndDiscount = async () => {
+      const costDocumentRef = firestore.collection("costs").doc("cost");
+      const costDocumentSnapshot = await costDocumentRef.get();
+      if (costDocumentSnapshot) {
+        const costDocumentData = costDocumentSnapshot.data();
+        console.log("costDocumentData: ", costDocumentData);
+        const documentDataCost = costDocumentData?.cost;
+        const documentDataCostModifiedISOString = costDocumentData?.modified;
+        console.log("documentDataCost", documentDataCost);
+        setCost(documentDataCost);
+        setCostModifiedISOString(documentDataCostModifiedISOString);
       }
       const discountDocumentRef = firestore
-        .collection("discount")
+        .collection("discounts")
         .doc("discount");
       const discountDocumentSnapshot = await discountDocumentRef.get();
       if (discountDocumentSnapshot) {
         const documentData = discountDocumentSnapshot.data();
         const documentDataDiscount = documentData?.discount;
+        const documentDataDiscountModifiedISOString = documentData?.modified;
         console.log("documentDataDiscount", documentDataDiscount);
         setDiscount(documentDataDiscount);
+        setDiscountModifiedISOString(documentDataDiscountModifiedISOString);
       }
     };
-    getPriceAndDiscount();
+    getCostAndDiscount();
   }, []);
 
   const editPriceHandler = (editedPrice: number) => {
-    setPrice(editedPrice);
+    setCost(editedPrice);
   };
   const editDiscountHandler = (editedDiscount: number) => {
     setDiscount(editedDiscount);
@@ -83,9 +94,11 @@ const App: React.FC = () => {
     <IonApp>
       <AppContext.Provider
         value={{
-          price,
+          cost,
+          costModifiedISOString,
           discount,
-          onEditPrice: editPriceHandler,
+          discountModifiedISOString,
+          onEditCost: editPriceHandler,
           onEditDiscount: editDiscountHandler,
         }}
       >
