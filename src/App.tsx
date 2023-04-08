@@ -48,10 +48,8 @@ const App: React.FC = () => {
       const costDocumentSnapshot = await costDocumentRef.get();
       if (costDocumentSnapshot) {
         const costDocumentData = costDocumentSnapshot.data();
-        console.log("costDocumentData: ", costDocumentData);
         const documentDataCost = costDocumentData?.cost;
         const documentDataCostModifiedISOString = costDocumentData?.modified;
-        console.log("documentDataCost", documentDataCost);
         setCost(documentDataCost);
         setCostModifiedISOString(documentDataCostModifiedISOString);
       }
@@ -63,7 +61,6 @@ const App: React.FC = () => {
         const documentData = discountDocumentSnapshot.data();
         const documentDataDiscount = documentData?.discount;
         const documentDataDiscountModifiedISOString = documentData?.modified;
-        console.log("documentDataDiscount", documentDataDiscount);
         setDiscount(documentDataDiscount);
         setDiscountModifiedISOString(documentDataDiscountModifiedISOString);
       }
@@ -71,11 +68,16 @@ const App: React.FC = () => {
     getCostAndDiscount();
   }, []);
 
-  const editPriceHandler = (editedPrice: number) => {
+  const editPriceHandler = (editedPrice: number, modified: string) => {
     setCost(editedPrice);
+    setCostModifiedISOString(modified);
   };
-  const editDiscountHandler = (editedDiscount: number) => {
+  const editDiscountHandler = (
+    editedDiscount: number,
+    modifiedDateISOString: string
+  ) => {
     setDiscount(editedDiscount);
+    setDiscountModifiedISOString(modifiedDateISOString);
   };
   const handleLogin = (role: string) => {
     setLoggedIn(true);

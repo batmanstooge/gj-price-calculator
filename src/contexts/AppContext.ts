@@ -5,8 +5,8 @@ interface appDefaultValues {
   costModifiedISOString: string;
   discount: number;
   discountModifiedISOString: string;
-  onEditCost?: (cost: number) => void;
-  onEditDiscount?: (discount: number) => void;
+  onEditCost?: (cost: number, modified: string) => void;
+  onEditDiscount?: (discount: number, modified: string) => void;
 }
 
 const defaultDateISOString = new Date().toISOString();

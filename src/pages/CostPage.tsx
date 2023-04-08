@@ -16,26 +16,26 @@ import { AppContext } from "../contexts/AppContext";
 import { firestore } from "../firebase/firebase";
 import "./Settings.css";
 
-const DiscountsPage: React.FC = () => {
+const CostPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const { discount, onEditDiscount } = useContext(AppContext);
-  const [enteredDiscount, setEnteredDiscount] = useState<any>(discount);
-  const handleEditDiscountChange = (event: { detail: { value: any } }) => {
-    setEnteredDiscount(event.detail.value);
+  const { cost, onEditCost } = useContext(AppContext);
+  const [enteredCost, setEnteredCost] = useState<any>(cost);
+  const handleEditCostChange = (event: { detail: { value: any } }) => {
+    setEnteredCost(event.detail.value);
   };
 
-  const handleDiscountSave = async () => {
+  const handlePriceSave = async () => {
     setLoading(true);
     const modifiedDateISOString = new Date().toISOString();
-    await firestore.collection("discounts").doc("discount").set(
+    await firestore.collection("costs").doc("cost").set(
       {
-        discount: +enteredDiscount,
+        cost: +enteredCost,
         modified: modifiedDateISOString,
       },
       { merge: true }
     );
 
-    if (onEditDiscount) onEditDiscount(enteredDiscount, modifiedDateISOString);
+    if (onEditCost) onEditCost(enteredCost, modifiedDateISOString);
     setLoading(false);
   };
 
@@ -43,21 +43,21 @@ const DiscountsPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Discount</IonTitle>
+          <IonTitle>Cost</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonList>
           <IonItem>
-            <IonLabel>Edit Discount</IonLabel>
+            <IonLabel>Edit Cost</IonLabel>
             <IonInput
               type="number"
-              value={enteredDiscount}
-              onIonChange={handleEditDiscountChange}
+              value={enteredCost}
+              onIonChange={handleEditCostChange}
             />
           </IonItem>
         </IonList>
-        <IonButton expand="block" onClick={handleDiscountSave}>
+        <IonButton expand="block" onClick={handlePriceSave}>
           Save
         </IonButton>
         <IonLoading isOpen={loading} />
@@ -66,4 +66,4 @@ const DiscountsPage: React.FC = () => {
   );
 };
 
-export default DiscountsPage;
+export default CostPage;
