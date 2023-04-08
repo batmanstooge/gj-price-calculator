@@ -68,8 +68,8 @@ const App: React.FC = () => {
     getCostAndDiscount();
   }, []);
 
-  const editPriceHandler = (editedPrice: number, modified: string) => {
-    setCost(editedPrice);
+  const editCostHandler = (editedCost: number, modified: string) => {
+    setCost(editedCost);
     setCostModifiedISOString(modified);
   };
   const editDiscountHandler = (
@@ -100,7 +100,7 @@ const App: React.FC = () => {
           costModifiedISOString,
           discount,
           discountModifiedISOString,
-          onEditCost: editPriceHandler,
+          onEditCost: editCostHandler,
           onEditDiscount: editDiscountHandler,
         }}
       >

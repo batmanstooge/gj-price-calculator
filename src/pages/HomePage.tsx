@@ -12,6 +12,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonLoading,
   IonPage,
   IonRow,
   IonSelect,
@@ -41,6 +42,8 @@ const HomePage: React.FC = () => {
   const { cost, costModifiedISOString, discount, discountModifiedISOString } =
     useContext(AppContext);
   const [price, setPrice] = useState<number>(+cost);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [isVariablesChanged, setIsVariablesChanged] = useState(false);
 
   useEffect(() => {
     setPrice(+cost);
@@ -52,34 +55,40 @@ const HomePage: React.FC = () => {
   const colourVariableChanged = (event: {
     detail: { value: SetStateAction<string> };
   }) => {
+    setIsVariablesChanged(true);
     setColour(event.detail.value);
   };
 
   const clarityVariableChanged = (event: {
     detail: { value: SetStateAction<string> };
   }) => {
+    setIsVariablesChanged(true);
     setClarity(event.detail.value);
   };
 
   const cutVariableChanged = (event: {
     detail: { value: SetStateAction<string> };
   }) => {
+    setIsVariablesChanged(true);
     setCut(event.detail.value);
   };
 
   const polishVariableChanged = (event: {
     detail: { value: SetStateAction<string> };
   }) => {
+    setIsVariablesChanged(true);
     setPolish(event.detail.value);
   };
 
   const symmetryVariableChanged = (event: {
     detail: { value: SetStateAction<string> };
   }) => {
+    setIsVariablesChanged(true);
     setSymmetry(event.detail.value);
   };
 
   const calculatePriceHandler = () => {
+    setIsCalculating(true);
     const calculatedPrice = calculatePrice(
       colour,
       clarity,
@@ -90,6 +99,8 @@ const HomePage: React.FC = () => {
       discount
     );
     setPrice(calculatedPrice);
+    setIsCalculating(false);
+    setIsVariablesChanged(false);
   };
 
   return (
@@ -197,44 +208,43 @@ const HomePage: React.FC = () => {
             </IonButton>
           </IonCardContent>
         </IonCard>
-        <IonCard>
+        <IonCard color="light">
+          <IonLoading isOpen={isCalculating} />
           <IonCardHeader>
             <IonCardTitle>
               Price for {formattedVariablesForCalculation()}
               <IonCardSubtitle>
                 <IonGrid>
-                  <IonRow class="ion-align-items-center">
-                    <IonCol>Cost</IonCol>
+                  <IonRow>
+                    <IonCol size="4">
+                      <IonText>Cost</IonText>
+                    </IonCol>
                     <IonCol>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol>
-                            <IonText>{cost}</IonText>
-                          </IonCol>
-                        </IonRow>
-                        <IonRow>
-                          <IonCol>
-                            <IonText>{costModifiedISOString}</IonText>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
+                      <IonText>Last Modified</IonText>
                     </IonCol>
                   </IonRow>
-                  <IonRow class="ion-align-items-center">
-                    <IonCol>Discount</IonCol>
+                  <IonRow>
+                    <IonCol size="4">
+                      <IonText>{cost}</IonText>
+                    </IonCol>
                     <IonCol>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol>
-                            <IonText>{discount}</IonText>
-                          </IonCol>
-                        </IonRow>
-                        <IonRow>
-                          <IonCol>
-                            <IonText>{discountModifiedISOString}</IonText>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
+                      <IonText>{costModifiedISOString}</IonText>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol size="4">
+                      <IonText>Discount</IonText>
+                    </IonCol>
+                    <IonCol>
+                      <IonText>Last Modified</IonText>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol size="4">
+                      <IonText>{discount}</IonText>
+                    </IonCol>
+                    <IonCol>
+                      <IonText>{discountModifiedISOString}</IonText>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
@@ -242,9 +252,15 @@ const HomePage: React.FC = () => {
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            <IonText>
-              <h1>{price?.toFixed(2)}</h1>
-            </IonText>
+            {isVariablesChanged ? (
+              <IonText color="warning" class="ion-text-center">
+                <h1>Recalculate with new variables</h1>
+              </IonText>
+            ) : (
+              <IonText color="success" class="ion-text-center">
+                <h1>{price?.toFixed(2)}</h1>
+              </IonText>
+            )}
           </IonCardContent>
         </IonCard>
       </IonContent>
